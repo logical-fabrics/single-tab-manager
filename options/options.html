@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Single Tab Manager - 設定</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Single Tab Manager</h1>
+        <p class="subtitle">URLパターンによるタブ制御設定</p>
+      </header>
+
+      <main>
+        <section class="patterns-section">
+          <label for="patterns">
+            <strong>URLパターン（正規表現）</strong>
+            <span class="hint">1行に1つのパターンを入力してください</span>
+          </label>
+          <textarea
+            id="patterns"
+            rows="10"
+            placeholder="例:&#10;https://example\.com/.*&#10;https://192\.168\.100\.197/DicomWeb/.*"></textarea>
+
+          <div class="actions">
+            <button id="save" class="btn-primary">保存</button>
+            <button id="reset" class="btn-secondary">リセット</button>
+          </div>
+
+          <div id="status" class="status hidden"></div>
+        </section>
+
+        <section class="help-section">
+          <h2>使い方</h2>
+          <ul>
+            <li>
+              正規表現でURLパターンを指定します（改行区切りで複数設定可能）
+            </li>
+            <li>
+              同じパターンに一致するタブが既に開かれている場合、新しいタブだけが残ります
+            </li>
+            <li>既存の一致するタブは自動的に閉じられます</li>
+          </ul>
+
+          <h3>正規表現の例</h3>
+          <table class="examples">
+            <thead>
+              <tr>
+                <th>パターン</th>
+                <th>説明</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>https://example\.com/.*</code></td>
+                <td>example.com 配下の全てのページ</td>
+              </tr>
+              <tr>
+                <td><code>https://.*\.example\.com/.*</code></td>
+                <td>example.com の全てのサブドメイン</td>
+              </tr>
+              <tr>
+                <td><code>https://192\.168\.100\.\d+/.*</code></td>
+                <td>192.168.100.x のIPアドレス</td>
+              </tr>
+              <tr>
+                <td><code>https://github\.com/.+/issues/\d+</code></td>
+                <td>GitHubのissueページ</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p class="note">
+            <strong>注意:</strong>
+            正規表現の特殊文字（<code>.</code> <code>*</code> <code>+</code>
+            など）は<code>\</code>でエスケープしてください。
+          </p>
+        </section>
+      </main>
+
+      <footer>
+        <p>Single Tab Manager v1.0.0</p>
+      </footer>
+    </div>
+
+    <script src="options.js"></script>
+  </body>
+</html>
