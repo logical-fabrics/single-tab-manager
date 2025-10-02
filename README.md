@@ -8,8 +8,6 @@
 
 ### 主な用途
 
-- 管理画面や開発ツールなど、複数タブで開きたくないページの制御
-- 社内システムやローカル開発環境の URL パターン管理
 - 特定ドメインやパスのタブを常に 1 つに保つ
 
 ## ✨ 機能
@@ -30,34 +28,25 @@
 
 ## 🚀 インストール
 
-### 開発者モードでのインストール（Chrome）
+### Chrome でのインストール
 
-1. このリポジトリをクローンまたはダウンロード
+1. Chrome を開き、`chrome://extensions/` にアクセス
 
-   ```bash
-   git clone https://github.com/yourusername/single-tab-manager.git
-   cd single-tab-manager
-   ```
+2. 右上の「デベロッパーモード」を有効化
 
-2. Chrome を開き、`chrome://extensions/` にアクセス
+3. 「パッケージ化されていない拡張機能を読み込む」をクリック
 
-3. 右上の「デベロッパーモード」を有効化
+4. `single-tab-manager` ディレクトリを選択
 
-4. 「パッケージ化されていない拡張機能を読み込む」をクリック
+### Edge でのインストール
 
-5. クローンした `single-tab-manager` ディレクトリを選択
+1. Edge を開き、`edge://extensions/` にアクセス
 
-### 開発者モードでのインストール（Edge）
+2. 左下の「開発者モード」を有効化
 
-1. 上記と同じ手順でリポジトリをクローン
+3. 「展開して読み込み」をクリック
 
-2. Edge を開き、`edge://extensions/` にアクセス
-
-3. 左下の「開発者モード」を有効化
-
-4. 「展開して読み込み」をクリック
-
-5. クローンした `single-tab-manager` ディレクトリを選択
+4. `single-tab-manager` ディレクトリを選択
 
 ## 📖 使い方
 
@@ -112,17 +101,6 @@ https://.*\.github\.com/issues/.*
 - Node.js (v18 以降推奨)
 - npm または npx
 
-### セットアップ
-
-```bash
-# リポジトリをクローン
-git clone https://github.com/yourusername/single-tab-manager.git
-cd single-tab-manager
-
-# Biome フォーマッターでコードを整形
-npx @biomejs/biome check --write .
-```
-
 ### ファイル構成
 
 ```
@@ -144,77 +122,6 @@ single-tab-manager/
     └── tasks.md          # 実装タスク一覧
 ```
 
-### デバッグ方法
-
-1. **Service Worker のコンソールを開く**
-   - `chrome://extensions/` → 拡張機能の詳細 → Service Worker の「検証」をクリック
-
-2. **ログ確認**
-   - `background.js` 内の `console.log` でタブ制御の動作を確認可能
-
-3. **設定の確認**
-   - DevTools の Application タブ → Storage → Chrome Storage → sync で保存された設定を確認
-
-### コーディング規約
-
-- フォーマッター: **Biome**
-  - シングルクォート
-  - セミコロン省略（as needed）
-  - 80 文字幅
-- アーリーリターンの徹底
-- アロー関数を使用
-- JSDoc コメントで関数を説明
-
-### コミット規約
-
-- コミットメッセージは日本語または英語
-- 末尾に以下を追加:
-
-  ```
-  🤖 Generated with [Claude Code](https://claude.com/claude-code)
-
-  Co-Authored-By: Claude <noreply@anthropic.com>
-  ```
-
-## 🧪 テスト
-
-### 基本動作テスト
-
-1. オプション画面でパターンを設定: `https://example\.com/.*`
-2. `https://example.com/page1` を開く
-3. 新しいタブで `https://example.com/page2` を開く
-4. → page1 のタブが閉じられ、page2 だけが残る
-
-### 複数パターンテスト
-
-```
-https://example\.com/.*
-https://192\.168\.100\.197/DicomWeb/.*
-```
-
-両方のパターンで独立して動作することを確認。
-
-## 📦 パッケージング
-
-### ZIP ファイルの作成
-
-```bash
-zip -r single-tab-manager.zip . \
-  -x "*.git*" \
-  -x "docs/*" \
-  -x "CLAUDE.md" \
-  -x "*.md" \
-  -x ".zed/*" \
-  -x "node_modules/*"
-```
-
-### Chrome Web Store への公開（将来）
-
-1. [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole/) にアクセス
-2. ZIP ファイルをアップロード
-3. スクリーンショットと説明を追加
-4. 審査を申請
-
 ## 🔒 セキュリティとプライバシー
 
 - **データ保存**: URL パターンは `chrome.storage.sync` のみに保存
@@ -226,11 +133,3 @@ zip -r single-tab-manager.zip . \
 ## 📄 ライセンス
 
 このプロジェクトは MIT ライセンスの下で公開されています。詳細は [LICENSE](LICENSE) ファイルを参照してください。
-
-## 🙏 謝辞
-
-このプロジェクトは [Claude Code](https://claude.com/claude-code) を使用して開発されました。
-
-## 📞 お問い合わせ
-
-バグ報告や機能要望は [GitHub Issues](https://github.com/yourusername/single-tab-manager/issues) にお願いします。
