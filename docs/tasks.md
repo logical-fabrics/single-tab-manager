@@ -26,10 +26,10 @@
 - [x] ディレクトリ構造の作成
   - [x] `options/` ディレクトリ
   - [x] `icons/` ディレクトリ
-- [ ] アイコンファイルの準備
-  - [ ] icon16.png (16x16)
-  - [ ] icon48.png (48x48)
-  - [ ] icon128.png (128x128)
+- [x] アイコンファイルの準備
+  - [x] icon16.png (16x16)
+  - [x] icon48.png (48x48)
+  - [x] icon128.png (128x128)
 
 ### 2.2 Manifest V3 設定
 - [x] manifest.json の作成
