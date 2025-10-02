@@ -40,22 +40,22 @@
   - [x] アイコン設定
 
 ### 2.3 バックグラウンド処理（background.js）
-- [ ] Service Worker の基本構造
-- [ ] 設定読み込み機能
-  - [ ] chrome.storage.sync からパターン取得
-- [ ] タブ監視機能
-  - [ ] chrome.tabs.onCreated リスナー
-  - [ ] chrome.tabs.onUpdated リスナー
-- [ ] URL パターンマッチング
-  - [ ] 正規表現による URL 判定
-  - [ ] 複数パターンのサポート
-  - [ ] エラーハンドリング（無効な正規表現）
-- [ ] タブ制御ロジック
-  - [ ] 一致する既存タブの検索
-  - [ ] 古いタブのクローズ
-  - [ ] 新しいタブのアクティブ化
-- [ ] デバッグ・ログ機能
-  - [ ] console.log でアクション記録
+- [x] Service Worker の基本構造
+- [x] 設定読み込み機能
+  - [x] chrome.storage.sync からパターン取得
+- [x] タブ監視機能
+  - [x] chrome.tabs.onCreated リスナー
+  - [x] chrome.tabs.onUpdated リスナー
+- [x] URL パターンマッチング
+  - [x] 正規表現による URL 判定
+  - [x] 複数パターンのサポート
+  - [x] エラーハンドリング（無効な正規表現）
+- [x] タブ制御ロジック
+  - [x] 一致する既存タブの検索
+  - [x] 古いタブのクローズ
+  - [x] 新しいタブのアクティブ化
+- [x] デバッグ・ログ機能
+  - [x] console.log でアクション記録
 
 ### 2.4 オプション画面（options/）
 - [ ] options.html の作成
