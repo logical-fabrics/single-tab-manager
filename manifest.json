@@ -3,10 +3,7 @@
   "name": "Single Tab Manager",
   "version": "1.0.0",
   "description": "同じURLパターンに一致するタブを1つだけに制御する拡張機能",
-  "permissions": [
-    "tabs",
-    "storage"
-  ],
+  "permissions": ["tabs", "storage"],
   "background": {
     "service_worker": "background.js"
   },
