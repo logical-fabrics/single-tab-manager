@@ -58,21 +58,21 @@
   - [x] console.log でアクション記録
 
 ### 2.4 オプション画面（options/）
-- [ ] options.html の作成
-  - [ ] テキストエリア（パターン入力）
-  - [ ] 保存ボタン
-  - [ ] ヘルプセクション（正規表現の例）
-  - [ ] ステータス表示（保存成功/失敗）
-- [ ] options.css の作成
-  - [ ] レイアウト・デザイン
-  - [ ] レスポンシブ対応
-  - [ ] Chrome/Edge ネイティブスタイル調和
-- [ ] options.js の作成
-  - [ ] DOM 要素の取得
-  - [ ] 設定読み込み（chrome.storage.sync.get）
-  - [ ] 設定保存（chrome.storage.sync.set）
-  - [ ] バリデーション（正規表現チェック）
-  - [ ] UI フィードバック（保存完了通知）
+- [x] options.html の作成
+  - [x] テキストエリア（パターン入力）
+  - [x] 保存ボタン
+  - [x] ヘルプセクション（正規表現の例）
+  - [x] ステータス表示（保存成功/失敗）
+- [x] options.css の作成
+  - [x] レイアウト・デザイン
+  - [x] レスポンシブ対応
+  - [x] Chrome/Edge ネイティブスタイル調和
+- [x] options.js の作成
+  - [x] DOM 要素の取得
+  - [x] 設定読み込み（chrome.storage.sync.get）
+  - [x] 設定保存（chrome.storage.sync.set）
+  - [x] バリデーション（正規表現チェック）
+  - [x] UI フィードバック（保存完了通知）
 
 ---
 
