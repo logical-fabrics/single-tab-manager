@@ -4,90 +4,61 @@
 
 ---
 
-## 1. 拡張機能の管理画面を開く
+## 1. 拡張機能をインストールする
 
-- **Chrome の場合**
-  アドレスバーに次を入力して Enter を押します：
+### Chrome の場合
 
-  ```
-  chrome://extensions/
-  ```
+以下のリンクを開いて、「Chrome に追加」ボタンをクリックします：
 
-  ![拡張機能の管理画面を開く_chrome](images/1_chrome.PNG)
+https://chromewebstore.google.com/detail/single-tab-manager/ebjpibdekbeokpkbabiombofcadmkdmb?authuser=0&hl=ja
 
-- **Edge の場合**
-  アドレスバーに次を入力して Enter を押します：
+### Edge の場合
 
-  ```
-  edge://extensions/
-  ```
+以下のリンクを開いて、「インストール」ボタンをクリックします：
 
-  ![拡張機能の管理画面を開く_edge](images/1_edge.PNG)
+https://microsoftedge.microsoft.com/addons/detail/single-tab-manager/hophlcdonmafhboablnkdfknpccfngpa
 
 ---
 
-## 2. デベロッパーモードを有効化する
+## 2. 設定画面を開く
 
-- **Chrome の場合**：「右上のスイッチ」をクリックして **デベロッパーモード** を ON にします。
-  ![デベロッパーモードを有効化する_chrome](images/2_chrome.PNG)
+拡張機能のオプションを開く方法:
 
-- **Edge の場合**：「左下のスイッチ」をクリックして **開発者モード** を ON にします。
-  ![デベロッパーモードを有効化する_edge](images/2_edge.PNG)
+### Chrome の場合
 
----
+1. `chrome://extensions/` をアドレスバーに入力して開く
+2. 「Single Tab Manager」の **詳細** ボタンをクリック
+   ![詳細設定画面を開く-1_chrome](images/options_step1_chrome.PNG)
+3. 「拡張機能のオプション」をクリック
+   ![詳細設定画面を開く-2_chrome](images/options_step2_chrome.PNG)
 
-## 3. 拡張機能を読み込む
+### Edge の場合
 
-- **Chrome の場合**：「パッケージ化されていない拡張機能を読み込む」をクリック
-  ![拡張機能を読み込む_chrome](images/3_chrome.PNG)
-
-- **Edge の場合**：「展開して読み込み」をクリック
-  ![拡張機能を読み込む_edge](images/3_edge.PNG)
-
----
-
-## 4. 拡張機能フォルダを選択
-
-- **`single-tab-manager`** を選択して読み込みます。
-  ![拡張機能フォルダを選択](images/4.PNG)
+1. `edge://extensions/` をアドレスバーに入力して開く
+2. 「Single Tab Manager」の **詳細** ボタンをクリック
+   ![詳細設定画面を開く-1_edge](images/options_step1_edge.PNG)
+3. 「拡張機能のオプション」をクリック
+   ![詳細設定画面を開く-2_edge](images/options_step2_edge.PNG)
 
 ---
 
-## 5. インストール確認
+## 3. URL パターンを設定する
 
-- 拡張機能一覧に **「Single Tab Manager」** が表示されていることを確認します。
-  ![インストール確認_chrome](images/5_chrome.PNG)
-  ![インストール確認_edge](images/5_edge.PNG)
+1. 設定画面が開いたら、「URL パターン（正規表現）」の入力欄に対象 URL のパターンを入力します。
 
----
+   例:
 
-## 6. 詳細設定画面を開く
-
-1. 「Single Tab Manager」の **詳細** ボタンをクリックします。
-   ![詳細設定画面を開く-1_chrome](images/6-1_chrome.PNG)
-   ![詳細設定画面を開く-1_edge](images/6-1_edge.PNG)
-2. 「拡張機能のオプション」をクリックします。
-   ![詳細設定画面を開く-2_chrome](images/6-2_chrome.PNG)
-   ![詳細設定画面を開く-2_edge](images/6-2_edge.PNG)
-
----
-
-## 7. URL パターンを設定する
-
-1. 設定画面が開いたら、「URL パターン（正規表現）」の入力欄に以下を入力します：
    ```
    http://192.168.100.197/DicomWeb/.*
    ```
+
 2. **保存** ボタンをクリックします。
 
-![URLパターンを設定する](images/7.PNG)
+   ![URLパターンを設定する](images/url_pattern_input.PNG)
 
----
+3. 画面に **「設定を保存しました」** と表示されれば完了です。
 
-## 8. 設定の確認
-
-- 画面に **「設定を保存しました」** と表示されれば完了です。
-  ![設定の確認](images/8.PNG)
+   ![設定の確認](images/save_confirmation.PNG)
 
 ---
 
