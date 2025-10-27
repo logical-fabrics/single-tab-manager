@@ -4,7 +4,12 @@
  */
 
 const STORAGE_KEY = 'urlPatterns'
-const LOG_PREFIX = '[Single Tab Manager]'
+
+// レースコンディション対策: 処理中のタブIDを記録
+const processingTabs = new Set()
+
+// デバウンス用のタイマー
+const debounceTimers = new Map()
 
 /**
  * 設定から正規表現パターンを取得
@@ -16,7 +21,6 @@ const getUrlPatterns = async () => {
     const patternsText = result[STORAGE_KEY] || ''
 
     if (!patternsText.trim()) {
-      console.log(LOG_PREFIX, 'No patterns configured')
       return []
     }
 
@@ -30,15 +34,13 @@ const getUrlPatterns = async () => {
     for (const pattern of lines) {
       try {
         patterns.push(new RegExp(pattern))
-        console.log(LOG_PREFIX, `Loaded pattern: ${pattern}`)
-      } catch (error) {
-        console.warn(LOG_PREFIX, `Invalid regex pattern: ${pattern}`, error)
+      } catch (_error) {
+        // 無効な正規表現はスキップ
       }
     }
 
     return patterns
-  } catch (error) {
-    console.error(LOG_PREFIX, 'Error loading patterns:', error)
+  } catch (_error) {
     return []
   }
 }
@@ -81,8 +83,7 @@ const findMatchingTabs = async (targetUrl, excludeTabId, patterns) => {
     }
 
     return matchingTabs
-  } catch (error) {
-    console.error(LOG_PREFIX, 'Error finding matching tabs:', error)
+  } catch (_error) {
     return []
   }
 }
@@ -98,77 +99,87 @@ const closeOldTabsAndActivateNew = async (newTabId, oldTabs) => {
     const oldTabIds = oldTabs.map((tab) => tab.id)
     if (oldTabIds.length > 0) {
       await chrome.tabs.remove(oldTabIds)
-      console.log(
-        LOG_PREFIX,
-        `Closed ${oldTabIds.length} old tab(s):`,
-        oldTabIds
-      )
     }
 
     // 新しいタブをアクティブにする
     await chrome.tabs.update(newTabId, { active: true })
-    console.log(LOG_PREFIX, `Activated new tab: ${newTabId}`)
-  } catch (error) {
-    console.error(LOG_PREFIX, 'Error managing tabs:', error)
+  } catch (_error) {
+    // エラーは静かに無視
   }
 }
 
 /**
- * タブのURL変更を処理
+ * タブのURL変更を処理（デバウンス + 重複処理防止）
  * @param {number} tabId - タブID
  * @param {string} url - 新しいURL
  */
 const handleTabUrl = async (tabId, url) => {
   if (!url || url.startsWith('chrome://') || url.startsWith('edge://')) return
 
-  console.log(LOG_PREFIX, `Checking tab ${tabId}: ${url}`)
-
-  // 設定からパターンを取得
-  const patterns = await getUrlPatterns()
-  if (patterns.length === 0) return
-
-  // URLがパターンに一致するかチェック
-  const matchedPattern = findMatchingPattern(url, patterns)
-  if (!matchedPattern) {
-    console.log(LOG_PREFIX, `URL does not match any pattern: ${url}`)
+  // 既に処理中の場合はスキップ（重複処理防止）
+  if (processingTabs.has(tabId)) {
     return
   }
 
-  console.log(LOG_PREFIX, `URL matches pattern: ${matchedPattern.source}`)
-
-  // 同じパターンに一致する既存タブを検索
-  const matchingTabs = await findMatchingTabs(url, tabId, patterns)
-
-  if (matchingTabs.length === 0) {
-    console.log(LOG_PREFIX, 'No existing matching tabs found')
-    return
+  // 既存のデバウンスタイマーをクリア
+  if (debounceTimers.has(tabId)) {
+    clearTimeout(debounceTimers.get(tabId))
   }
 
-  console.log(
-    LOG_PREFIX,
-    `Found ${matchingTabs.length} existing matching tab(s)`
+  // 300msのデバウンス処理（複数のイベント発火をまとめる）
+  debounceTimers.set(
+    tabId,
+    setTimeout(async () => {
+      processingTabs.add(tabId)
+
+      try {
+        // 設定からパターンを取得
+        const patterns = await getUrlPatterns()
+        if (patterns.length === 0) return
+
+        // URLがパターンに一致するかチェック
+        const matchedPattern = findMatchingPattern(url, patterns)
+        if (!matchedPattern) {
+          return
+        }
+
+        // 同じパターンに一致する既存タブを検索
+        const matchingTabs = await findMatchingTabs(url, tabId, patterns)
+
+        if (matchingTabs.length === 0) {
+          return
+        }
+
+        await closeOldTabsAndActivateNew(tabId, matchingTabs)
+      } finally {
+        // 処理完了後に必ずフラグをクリア
+        processingTabs.delete(tabId)
+        debounceTimers.delete(tabId)
+      }
+    }, 300)
   )
-  await closeOldTabsAndActivateNew(tabId, matchingTabs)
 }
 
 /**
- * タブ作成イベントリスナー
- */
-chrome.tabs.onCreated.addListener((tab) => {
-  if (tab.url) {
-    console.log(LOG_PREFIX, 'Tab created:', tab.id, tab.url)
-    handleTabUrl(tab.id, tab.url)
-  }
-})
-
-/**
  * タブ更新イベントリスナー
+ * タブ作成時もこのイベントでURL確定を検知するため、onCreatedは不要
  */
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, _tab) => {
   // URLが変更された場合のみ処理
   if (changeInfo.url) {
-    console.log(LOG_PREFIX, 'Tab updated:', tabId, changeInfo.url)
     handleTabUrl(tabId, changeInfo.url)
+  }
+})
+
+/**
+ * タブ削除イベントリスナー
+ * 処理中フラグとタイマーをクリーンアップ
+ */
+chrome.tabs.onRemoved.addListener((tabId) => {
+  processingTabs.delete(tabId)
+  if (debounceTimers.has(tabId)) {
+    clearTimeout(debounceTimers.get(tabId))
+    debounceTimers.delete(tabId)
   }
 })
 
@@ -176,7 +187,5 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, _tab) => {
  * 拡張機能インストール時の初期化
  */
 chrome.runtime.onInstalled.addListener(() => {
-  console.log(LOG_PREFIX, 'Extension installed/updated')
+  // 初期化処理（必要に応じて追加）
 })
-
-console.log(LOG_PREFIX, 'Service Worker initialized')
