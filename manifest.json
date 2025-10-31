@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Single Tab Manager",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "同じURLパターンに一致するタブを1つだけに制御する拡張機能",
   "permissions": ["tabs", "storage"],
   "background": {

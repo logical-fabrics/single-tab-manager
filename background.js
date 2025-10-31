@@ -11,6 +11,9 @@ const processingTabs = new Set()
 // デバウンス用のタイマー
 const debounceTimers = new Map()
 
+// グローバル処理フラグ: 同時処理を完全に防止
+let isProcessing = false
+
 /**
  * 設定から正規表現パターンを取得
  * @returns {Promise<RegExp[]>} 有効な正規表現パターンの配列
@@ -95,14 +98,21 @@ const findMatchingTabs = async (targetUrl, excludeTabId, patterns) => {
  */
 const closeOldTabsAndActivateNew = async (newTabId, oldTabs) => {
   try {
-    // 古いタブを閉じる
-    const oldTabIds = oldTabs.map((tab) => tab.id)
+    // 🛡️ 念のため: newTabId が閉じるリストに含まれていないか最終確認
+    const oldTabIds = oldTabs
+      .filter((tab) => tab.id !== newTabId)
+      .map((tab) => tab.id)
+
     if (oldTabIds.length > 0) {
       await chrome.tabs.remove(oldTabIds)
     }
 
-    // 新しいタブをアクティブにする
-    await chrome.tabs.update(newTabId, { active: true })
+    // 🛡️ 新しいタブをアクティブにする（タブが既に閉じられている可能性を考慮）
+    try {
+      await chrome.tabs.update(newTabId, { active: true })
+    } catch (_error) {
+      // タブが存在しない場合は静かに無視
+    }
   } catch (_error) {
     // エラーは静かに無視
   }
@@ -116,20 +126,27 @@ const closeOldTabsAndActivateNew = async (newTabId, oldTabs) => {
 const handleTabUrl = async (tabId, url) => {
   if (!url || url.startsWith('chrome://') || url.startsWith('edge://')) return
 
-  // 既に処理中の場合はスキップ（重複処理防止）
-  if (processingTabs.has(tabId)) {
+  // 既に処理中またはデバウンス待機中の場合はスキップ（重複処理防止）
+  if (processingTabs.has(tabId) || debounceTimers.has(tabId)) {
     return
   }
 
-  // 既存のデバウンスタイマーをクリア
-  if (debounceTimers.has(tabId)) {
-    clearTimeout(debounceTimers.get(tabId))
+  // グローバル処理中なら全体をスキップ
+  if (isProcessing) {
+    return
   }
 
   // 300msのデバウンス処理（複数のイベント発火をまとめる）
   debounceTimers.set(
     tabId,
     setTimeout(async () => {
+      // 処理開始時にも再チェック
+      if (isProcessing) {
+        debounceTimers.delete(tabId)
+        return
+      }
+
+      isProcessing = true
       processingTabs.add(tabId)
 
       try {
@@ -155,6 +172,7 @@ const handleTabUrl = async (tabId, url) => {
         // 処理完了後に必ずフラグをクリア
         processingTabs.delete(tabId)
         debounceTimers.delete(tabId)
+        isProcessing = false
       }
     }, 300)
   )
